@@ -1,0 +1,49 @@
+body {
+	font-size: 14px;
+	font-family: 'Open Sans', sans-serif;	
+}
+
+.rps_intro {
+	
+	.knockout_logo {
+		.letters {
+			
+			display: flex;
+			
+			.letter {
+				flex: 1;
+				max-width: 80px;
+				height: 60px;
+				background-repeat: no-repeat;
+				background-size: cover;
+				background-position: center center;
+				opacity: 0;
+				margin-right: 2px;
+				
+				&.k { background-image: url('../images/knockout_logo/letter_k.png'); }
+				&.n { background-image: url('../images/knockout_logo/letter_n.png'); }
+				&.o { background-image: url('../images/knockout_logo/letter_o.png'); }
+				&.c { background-image: url('../images/knockout_logo/letter_c.png'); }
+				&.u { background-image: url('../images/knockout_logo/letter_u.png'); }
+				&.t { background-image: url('../images/knockout_logo/letter_t.png'); }
+			}
+		}
+		
+		.word {
+			
+			display: flex;
+			flex: 1;
+			
+			&.gaming {
+				max-width: 378px;
+				height: 50px;
+				background-image: url('../images/knockout_logo/word_gaming.png');
+				background-repeat: no-repeat;
+				background-size: cover;
+				background-position: center center;
+				opacity: 0;
+			}
+		}
+		
+	}
+}

@@ -1,0 +1,40 @@
+body {
+  font-size: 14px;
+  font-family: 'Open Sans', sans-serif; }
+
+.rps_intro .knockout_logo .letters {
+  display: flex; }
+  .rps_intro .knockout_logo .letters .letter {
+    flex: 1;
+    max-width: 80px;
+    height: 60px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    opacity: 0;
+    margin-right: 2px; }
+    .rps_intro .knockout_logo .letters .letter.k {
+      background-image: url("../images/knockout_logo/letter_k.png"); }
+    .rps_intro .knockout_logo .letters .letter.n {
+      background-image: url("../images/knockout_logo/letter_n.png"); }
+    .rps_intro .knockout_logo .letters .letter.o {
+      background-image: url("../images/knockout_logo/letter_o.png"); }
+    .rps_intro .knockout_logo .letters .letter.c {
+      background-image: url("../images/knockout_logo/letter_c.png"); }
+    .rps_intro .knockout_logo .letters .letter.u {
+      background-image: url("../images/knockout_logo/letter_u.png"); }
+    .rps_intro .knockout_logo .letters .letter.t {
+      background-image: url("../images/knockout_logo/letter_t.png"); }
+.rps_intro .knockout_logo .word {
+  display: flex;
+  flex: 1; }
+  .rps_intro .knockout_logo .word.gaming {
+    max-width: 378px;
+    height: 50px;
+    background-image: url("../images/knockout_logo/word_gaming.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    opacity: 0; }
+
+/*# sourceMappingURL=default.css.map */
