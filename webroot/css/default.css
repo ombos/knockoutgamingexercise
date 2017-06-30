@@ -1,40 +1,81 @@
-body {
+html, body {
   font-size: 14px;
-  font-family: 'Open Sans', sans-serif; }
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  padding: 0; }
 
-.rps_intro .knockout_logo .letters {
-  display: flex; }
-  .rps_intro .knockout_logo .letters .letter {
+#main {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; }
+
+/*
+*
+* * * INTRO * * * 
+*
+*/
+.rps_intro .knockout_logo {
+  height: 96vh; }
+  .rps_intro .knockout_logo .letters {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; }
+    .rps_intro .knockout_logo .letters .letter {
+      flex: 1;
+      max-width: 80px;
+      height: 60px;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
+      opacity: 0;
+      margin-right: 2px; }
+      .rps_intro .knockout_logo .letters .letter.k {
+        background-image: url("../images/knockout_logo/letter_k.png"); }
+      .rps_intro .knockout_logo .letters .letter.n {
+        background-image: url("../images/knockout_logo/letter_n.png"); }
+      .rps_intro .knockout_logo .letters .letter.o {
+        background-image: url("../images/knockout_logo/letter_o.png"); }
+      .rps_intro .knockout_logo .letters .letter.c {
+        background-image: url("../images/knockout_logo/letter_c.png"); }
+      .rps_intro .knockout_logo .letters .letter.u {
+        background-image: url("../images/knockout_logo/letter_u.png"); }
+      .rps_intro .knockout_logo .letters .letter.t {
+        background-image: url("../images/knockout_logo/letter_t.png"); }
+  .rps_intro .knockout_logo .word {
+    display: flex;
     flex: 1;
-    max-width: 80px;
-    height: 60px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
-    opacity: 0;
-    margin-right: 2px; }
-    .rps_intro .knockout_logo .letters .letter.k {
-      background-image: url("../images/knockout_logo/letter_k.png"); }
-    .rps_intro .knockout_logo .letters .letter.n {
-      background-image: url("../images/knockout_logo/letter_n.png"); }
-    .rps_intro .knockout_logo .letters .letter.o {
-      background-image: url("../images/knockout_logo/letter_o.png"); }
-    .rps_intro .knockout_logo .letters .letter.c {
-      background-image: url("../images/knockout_logo/letter_c.png"); }
-    .rps_intro .knockout_logo .letters .letter.u {
-      background-image: url("../images/knockout_logo/letter_u.png"); }
-    .rps_intro .knockout_logo .letters .letter.t {
-      background-image: url("../images/knockout_logo/letter_t.png"); }
-.rps_intro .knockout_logo .word {
+    align-items: center;
+    justify-content: center;
+    margin: 25px auto 0 auto; }
+    .rps_intro .knockout_logo .word.gaming {
+      width: 378px;
+      height: 50px;
+      background-image: url("../images/knockout_logo/word_gaming.png");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
+      opacity: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -189px;
+      margin-top: 50px; }
+
+/*
+*
+* * * SELECT OF GAME ITEM * * * 
+*
+*/
+.rps_select_item {
+  width: 100%;
+  height: 100%;
   display: flex;
-  flex: 1; }
-  .rps_intro .knockout_logo .word.gaming {
-    max-width: 378px;
-    height: 50px;
-    background-image: url("../images/knockout_logo/word_gaming.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
-    opacity: 0; }
+  align-items: center;
+  justify-content: center; }
+  .rps_select_item .player-nick {
+    width: 100%;
+    height: 100%;
+    transform: translateY(-110vh); }
 
 /*# sourceMappingURL=default.css.map */

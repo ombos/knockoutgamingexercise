@@ -1,4 +1,4 @@
-<div class="rps_intro col-xs-12" rps-intro>
+<div class="rps_intro" rpsIntro>
 	<div class="knockout_logo">
 		<div class="letters">
 			<em class="letter k"></em>

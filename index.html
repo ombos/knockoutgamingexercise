@@ -21,7 +21,8 @@
 	</head>
 	<body>
 		<div id="main" ng-controller="rpsController as rpsc">
-			<div id="rps_state_content" ng-include="stateData.template.file"></div>
+			{{data.stateData.template.file}}
+			<ng-include src="data.stateData.template.file"></ng-include>
 		</div>
 		
 		<script type="text/javascript" src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
