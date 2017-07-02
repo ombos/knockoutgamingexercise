@@ -1,15 +1,19 @@
-<div class="rps_intro" rpsIntro>
-	<div class="knockout_logo">
-		<div class="letters">
-			<em class="letter k"></em>
-			<em class="letter n"></em>
-			<em class="letter o"></em>
-			<em class="letter c"></em>
-			<em class="letter k"></em>
-			<em class="letter o"></em>
-			<em class="letter u"></em>
-			<em class="letter t"></em>
+<div class="rps_select_enemy" rps-select-enemy>
+	<div class="enemies-to-select">
+	
+		<h1>Select your enemy:</h1>
+		<div class="enemies">
+			<div class="enemy" ng-click="selectEnemy('computer')" ng-class="{selected: selectedEnemy=='computer'}">
+				<span class="enemy-icon computer"></span>
+				<span class="enemy-name">Computer</span>
+				<div class="enemy-description">test test test</div>
+			</div>
+			<div class="enemy" ng-click="selectEnemy('player')" ng-class="{selected: selectedEnemy=='player'}">
+				<span class="enemy-icon player"></span>
+				<span class="enemy-name">Player</span>
+				<div class="enemy-description">test test test</div>
+			</div>
 		</div>
-		<em class="word gaming"></em>
 	</div>
+	
 </div>
