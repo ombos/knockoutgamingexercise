@@ -1,6 +1,6 @@
 <div class="rps_select_item" rps-select-item>
 	<div class="player-nick">
-		<input type="text"  placeholder="Please, type your nick" ng-model="playerName" ng-class="{inputError: inputError}" /> <br/>
+		<input type="text"  placeholder="Please, type your nick" ng-model="playerName" ng-class="{inputError: inputError}" ng-keydown="$event.keyCode === 13 && savePlayerNick()" autofocus /> <br/>
 		<button class="btn btn-lg btn-primary"  ng-click="savePlayerNick()">Let's play !</button>
 	</div>
 	

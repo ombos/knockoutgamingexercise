@@ -6,6 +6,8 @@ service('rpsManager', function(){
 	var playerNick;
 	var playerItem = false;
 	var playerEnemy = false;
+	var playerLastGame = {};
+	var playerGameHistory = [];
 	
 	return {
 			getState: function(){
@@ -47,6 +49,22 @@ service('rpsManager', function(){
 				if (enemy != undefined) {
 					playerEnemy = enemy;
 				}
+			},
+			getPlayerGameHistory: function(){
+				return playerGameHistory;
+			}, 
+			addPlayerGameHistory: function(gameObject) {
+				if (gameObject != undefined) {
+					playerGameHistory.push(gameObject);
+				}
+			},
+			getPlayerLastGame: function() {
+				return playerLastGame;
+			}, 
+			setPlayerLastGame: function(gameObject) {
+				if (gameObject != undefined) {
+					playerLastGame = gameObject;
+				}
 			}
 	};
 	
@@ -54,9 +72,30 @@ service('rpsManager', function(){
 controller('rpsController', function($scope, rpsManager) {
 	
 	var templatePath = 'templates/';
-	var test = 'lubie testy';
-	var parentScope = $scope;
+	
+	//---@TODO
+	var itemConnexions = [];
+	var rockArray = [];
+	var paperArray = [];
+	var scissorsArray = [];
+	rockArray['scissors'] = 1;
+	rockArray['paper'] = 0;
+	paperArray['rock'] = 1;
+	paperArray['scissors'] = 0;
+	scissorsArray['paper'] = 1;
+	scissorsArray['rock'] = 0;
+	
+	itemConnexions['rock'] = rockArray;
+	itemConnexions['paper'] = paperArray;
+	itemConnexions['scissors'] = scissorsArray;
+	//---
+	
 	$scope.data = {};
+	$scope.data.items = [
+		'rock',
+		'paper',
+		'scissors'
+	];
 	$scope.data.templates = [
 		{file: templatePath+'intro.tpl'},
 		{file: templatePath+'select-item.tpl'},
@@ -75,6 +114,7 @@ controller('rpsController', function($scope, rpsManager) {
 		{stateNo: 6, name: 'Game result', template: $scope.data.templates[5]},
 		{stateNo: 7, name: 'View your all game results', template: $scope.data.templates[6]},
 	];
+	$scope.data.connexions = itemConnexions;
 	
 	$scope.$on('stateChange', function(e, data){
 		
@@ -87,6 +127,31 @@ controller('rpsController', function($scope, rpsManager) {
 			$scope.$digest();
 		}
 	});
+	
+	$scope.drawItem = function() {
+		var randomKey = Math.floor(Math.random() * (2 - 0 + 1));
+		var drawItem = $scope.data.items[randomKey];
+		return drawItem;
+	}
+	
+	//---  1=> wins, 0 => loses, -1 => draw
+	$scope.compareItems = function(player1, player2) {
+		
+		if (player1 != undefined && player2 != undefined) {
+			if (player1.item != player2.item) {
+				
+				var player1Result = $scope.data.connexions[player1.item][player2.item]; 
+				var player2Result = $scope.data.connexions[player2.item][player1.item]; 
+				/*return {
+					player1: player1Result,
+					player2: player2Result
+				};*/
+				return player1Result;
+			} else {
+				return -1;
+			}
+		}
+	}
 	
 	if (rpsManager.getInit() == true) {
 		
@@ -139,14 +204,15 @@ directive('rpsSelectItem', function(rpsManager){
 			if (playerNick == undefined) {
 				TweenMax.to($('.player-nick'), 0.8, {css: {transform: "translateY(0)"}, ease:Power2.easeOut});
 			} else {
-				
+				TweenMax.to($('.items-to-select'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut});
 			}
 			
 			scope.savePlayerNick = function(){
-				var _nick = scope.playerName;
+				var nick = scope.playerName;
 				
-				if (_nick != '' && _nick != undefined && _nick.length >= 3) {
+				if (nick != '' && nick != undefined && nick.length >= 3) {
 					scope.inputError = false;
+					rpsManager.setPlayerNick(nick);
 					TweenMax.to($('.player-nick'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut});
 					TweenMax.to($('.items-to-select'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut});
 				} else {
@@ -209,7 +275,46 @@ directive('rpsGameContainer', function(rpsManager){
 			var currentEnemy =  rpsManager.getPlayerEnemy();
 			
 			 if (currentEnemy == 'computer') {
-				 
+
+				var myItem = rpsManager.getPlayerItem(); 
+				var itemDraw = scope.drawItem();
+				scope.player1 = {player: rpsManager.getPlayerNick(), item: myItem, status: 'ready'};
+				scope.player2 = {player: 'Computer', item: itemDraw, status: 'waiting'};
+				var gameResult = scope.compareItems(scope.player1, scope.player2);
+				
+				console.log(gameResult);
+					
+				TweenMax.to($('.player1'), 0.8, {css: {transform: "translateX(0vw)"}, ease:Power2.easeOut});
+				TweenMax.to($('.player2'), 0.8, {css: {transform: "translateX(0vw)"}, ease:Power2.easeOut, onComplete: function(){		
+					
+					TweenMax.to($('.status-container h1'), 0.8, {css: {opacity: 0}, ease:Power2.easeOut, onComplete: function(){
+						var currentGame = {
+							gameId: 'asd4324',
+							gameResult: gameResult,
+							player1: scope.player1,
+							player2: scope.player2
+						};
+						rpsManager.addPlayerGameHistory(currentGame);
+						rpsManager.setPlayerLastGame(currentGame);
+						scope.player2.status = itemDraw;
+						scope.$apply();
+						
+						TweenMax.to($('.player1 .status-container'), 0.8, {css: {transform: "translateX(-100vw)"}, ease:Power2.easeOut});
+						TweenMax.to($('.player2 .status-container'), 0.8, {css: {transform: "translateX(100vw)"}, ease:Power2.easeOut, onComplete: function(){
+							
+							TweenMax.to($('.rps_game_container'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
+								scope.$emit('stateChange', 6);
+							}}).delay(2);
+							
+						}});
+					}}).delay(2);
+					
+				}});
+
+				
+				
+				
+				
 			 } else if (currentEnemy == 'player') {
 				 
 			 }
@@ -224,6 +329,55 @@ directive('rpsSelectPlayer', function(rpsManager){
 		link: function(scope, element, attrs) {
 			
 			console.log('select player');
+			
+		}
+	}
+}).
+directive('rpsGameResult', function(rpsManager){
+	return {
+		scope: true,
+		transclude: false,
+		link: function(scope, element, attrs) {
+			
+			TweenMax.to($('.rps_game_result'), 0.8, {css: {transform: "translateY(0vh)"}, ease:Power2.easeOut});
+			scope.playerLastGame = rpsManager.getPlayerLastGame();
+			
+			scope.playAgain = function(){
+				TweenMax.to($('.rps_game_result'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
+					scope.$emit('stateChange', 5);
+				}});
+			};
+			
+			scope.goToMainMenu = function(){
+				console.log('go main menu');
+				TweenMax.to($('.rps_game_result'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
+					scope.$emit('stateChange', 2);
+				}});
+			};
+			
+			scope.showGameHistory = function(){
+				TweenMax.to($('.rps_game_result'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
+					scope.$emit('stateChange', 7);
+				}});
+			};
+			
+		}
+	}
+}).
+directive('rpsGamesHistory', function(rpsManager){
+	return {
+		scope: true,
+		transclude: false,
+		link: function(scope, element, attrs) {
+			
+			TweenMax.to($('.rps_games_history'), 0.8, {css: {transform: "translateY(0vh)"}, ease:Power2.easeOut});
+			scope.gamesHistory = rpsManager.getPlayerGameHistory();
+			
+			scope.goToMainMenu = function(){
+				TweenMax.to($('.rps_games_history'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
+					scope.$emit('stateChange', 2);
+				}});
+			};
 			
 		}
 	}
