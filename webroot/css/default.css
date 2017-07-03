@@ -287,6 +287,129 @@ html, body {
           .rps_select_enemy .enemies-to-select .enemies .enemy.selected .enemy-name {
             color: #1e5677; }
 
+.rps_select_player {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(100vh); }
+  .rps_select_player .players-to-select {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: #d8d8d8; }
+    .rps_select_player .players-to-select h1 {
+      width: 100%;
+      text-align: center; }
+    .rps_select_player .players-to-select .players {
+      display: flex;
+      width: 90vw; }
+      .rps_select_player .players-to-select .players .player {
+        display: flex;
+        flex-grow: 1;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        border: 1px solid #aaa;
+        padding: 30px 30px;
+        margin-left: 4vw;
+        transition: 0.4s ease all 0s;
+        -webkit-transition: 0.4s ease all 0s;
+        -moz-transition: 0.4s ease all 0s;
+        -ms-transition: 0.4s ease all 0s;
+        -o-transition: 0.4s ease all 0s; }
+        .rps_select_player .players-to-select .players .player .player-name {
+          display: block;
+          text-align: center;
+          width: 100%;
+          text-transform: uppercase;
+          font-size: 16px;
+          font-weight: 300; }
+        .rps_select_player .players-to-select .players .player .player-icon {
+          display: block;
+          width: 180px;
+          height: 180px;
+          background-size: 70%;
+          background-repeat: no-repeat;
+          background-position: center center;
+          size: 80%;
+          transition: 0.4s ease all 0s;
+          -webkit-transition: 0.4s ease all 0s;
+          -moz-transition: 0.4s ease all 0s;
+          -ms-transition: 0.4s ease all 0s;
+          -o-transition: 0.4s ease all 0s; }
+          .rps_select_player .players-to-select .players .player .player-icon.local {
+            background-image: url("../images/players_icon.png"); }
+          .rps_select_player .players-to-select .players .player .player-icon.remote {
+            background-image: url("../images/computer_remote_icon.png"); }
+        .rps_select_player .players-to-select .players .player .player-description {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          min-height: 50px;
+          background: #1e5677;
+          color: #fff;
+          transform: translateY(0vh);
+          border: 1px solid #1e5677;
+          visibility: hidden;
+          transition: 0.4s ease all 0s;
+          -webkit-transition: 0.4s ease all 0s;
+          -moz-transition: 0.4s ease all 0s;
+          -ms-transition: 0.4s ease all 0s;
+          -o-transition: 0.4s ease all 0s; }
+        .rps_select_player .players-to-select .players .player:hover {
+          border-color: #1e5677; }
+          .rps_select_player .players-to-select .players .player:hover .player-name {
+            color: #1e5677; }
+          .rps_select_player .players-to-select .players .player:hover .player-icon {
+            background-size: 85%;
+            -webkit-transform: rotate(15deg);
+            -moz-transform: rotate(15deg);
+            -o-transform: rotate(15deg);
+            -ms-transform: rotate(15deg);
+            transform: rotate(15deg); }
+          .rps_select_player .players-to-select .players .player:hover .player-description {
+            visibility: visible;
+            transform: translateY(-50px); }
+        .rps_select_player .players-to-select .players .player.selected {
+          border-color: #1e5677; }
+          .rps_select_player .players-to-select .players .player.selected .player-name {
+            color: #1e5677; }
+  .rps_select_player .remote-play {
+    display: flex;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(100vh);
+    width: 100%;
+    height: 100%;
+    background-color: #d8d8d8; }
+    .rps_select_player .remote-play h1 {
+      font-size: 36px;
+      width: 100%;
+      text-align: center; }
+      .rps_select_player .remote-play h1 i {
+        font-size: 36px; }
+  .rps_select_player .local-play {
+    display: flex;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(100vh);
+    width: 100%;
+    height: 100%;
+    background-color: #d8d8d8; }
+
 .rps_game_container {
   display: flex;
   flex-wrap: nowrap;

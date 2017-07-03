@@ -213,8 +213,10 @@ directive('rpsSelectItem', function(rpsManager){
 				if (nick != '' && nick != undefined && nick.length >= 3) {
 					scope.inputError = false;
 					rpsManager.setPlayerNick(nick);
-					TweenMax.to($('.player-nick'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut});
-					TweenMax.to($('.items-to-select'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut});
+					TweenMax.to($('.player-nick'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
+							TweenMax.to($('.items-to-select'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut});
+					}});
+					
 				} else {
 					scope.inputError = true;
 				}
@@ -328,7 +330,21 @@ directive('rpsSelectPlayer', function(rpsManager){
 		transclude: false,
 		link: function(scope, element, attrs) {
 			
-			console.log('select player');
+			TweenMax.to($('.rps_select_player'), 0.8, {css: {transform: "translateY(0vh)"}, ease:Power2.easeOut});
+			
+			scope.selectPlayer = function(player) {
+				console.log('player: '+player);
+				if (player != '' && player != undefined) {
+					
+					TweenMax.to($('.players-to-select'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
+						if (player == 'local') {
+							TweenMax.to($('.local-play'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut});
+						} else if (player == 'remote') {
+							TweenMax.to($('.remote-play'), 0.8, {css: {transform: "translateY(-200vh)"}, ease:Power2.easeOut});
+						}
+					}});
+				}
+			}
 			
 		}
 	}
