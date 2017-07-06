@@ -277,7 +277,7 @@ directive('rpsSelectEnemy', function(rpsManager){
 		}
 	};
 }).
-directive('rpsGameContainer', function(rpsManager){
+directive('rpsGameContainer', function(rpsManager, $resource){
 	return {
 		scope: true,
 		transclude: false,
@@ -303,11 +303,18 @@ directive('rpsGameContainer', function(rpsManager){
 			 }
 			
 			var gameResult = scope.compareItems(scope.player1, scope.player2);
-					
+			
 			TweenMax.to($('.player1'), 0.8, {css: {transform: "translateX(0vw)"}, ease:Power2.easeOut});
 			TweenMax.to($('.player2'), 0.8, {css: {transform: "translateX(0vw)"}, ease:Power2.easeOut, onComplete: function(){		
 				
 				TweenMax.to($('.status-container h1'), 0.8, {css: {opacity: 0}, ease:Power2.easeOut, onComplete: function(){
+					
+					if (currentEnemy == 'player') {
+						console.log('try to delete game:' + scope.gameId);
+						var deleteGame = $resource("/game/deletegame/:gameid", {gameid: '@gameid'});
+						deleteGame.save({gameid: scope.gameId});
+					}
+					
 					var currentGame = {
 						gameId: scope.gameId,
 						gameResult: gameResult,
@@ -367,7 +374,6 @@ directive('rpsSelectPlayer', function(rpsManager, $resource){
 										scope.$emit('stateChange', 5);
 									}}).delay(2);
 								}
-								
 							});
 							TweenMax.to($('.remote-play'), 0.8, {css: {transform: "translateY(-200vh)"}, ease:Power2.easeOut});
 						}
