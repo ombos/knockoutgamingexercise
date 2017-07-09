@@ -9,6 +9,7 @@ service('rpsManager', function(){
 	var playerEnemyData = {};
 	var playerLastGame = {};
 	var playerGameHistory = [];
+	var gameId = false;
 	
 	return {
 			getState: function(){
@@ -73,6 +74,14 @@ service('rpsManager', function(){
 			setPlayerEnemyData: function(enemyDataObject) {
 				if (enemyDataObject != undefined) {
 					playerEnemyData = enemyDataObject;
+				}
+			}, 
+			getGameId: function() {
+				return gameId;
+			}, 
+			setGameId: function(gameId) {
+				if (gameId != undefined) {
+					gameId = gameId;
 				}
 			}
 	};
@@ -359,11 +368,17 @@ directive('rpsSelectPlayer', function(rpsManager, $resource){
 					
 					TweenMax.to($('.players-to-select'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
 						if (player == 'local') {
+							
+							// @TODO
 							TweenMax.to($('.local-play'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut});
+							
 						} else if (player == 'remote') {
 							
 							var gamePlay = $resource("/game/nick/:nick/item/:item", {nick: '@nick', item: '@item'});
 							var gameData = gamePlay.save({nick: rpsManager.getPlayerNick(), item: rpsManager.getPlayerItem()});
+							
+							console.log('gameData zwrotka: ', gameData);
+							
 							gameData.$promise.then(function(result){
 								
 								if (result.gameId != undefined && result.nick != undefined && result.item != undefined) {
