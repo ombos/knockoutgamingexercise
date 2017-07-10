@@ -1,7 +1,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var session = require('express-session')
+var session = require('express-session');
+var events = require('events');
+var eventEmitter = new events.EventEmitter();
 var app = express();
 var gamesAwaiting = [];
 var gamesOnline = [];
@@ -143,7 +145,7 @@ function _checkForWaitingGames(sessionID, request, gamesAwaiting) {
 
 
 app.all('/game/nick/:nick/item/:item', function (req, res) {
-	
+	eventEmitter.emit('message');
 	var sessionID = req.sessionID;
 	var gameToPlay = _checkForWaitingGames(sessionID, req, gamesAwaiting);
 	
