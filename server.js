@@ -18,13 +18,6 @@ app.use(session({
     saveUninitialized: true
 }));
 
-module.exports = function (socket) {
-	socket.emit('init', {
-		test: 'test'
-	});
-
-};
-
 function generateGameId() {
 	
 	var gameId = "";
@@ -57,7 +50,6 @@ function deleteGameId(gameId, type, gamesAwaiting, gamesOnline) {
 	}
 	
 	return true;
-	
 }
 
 function _checkUnique(gameId, gamesAwaiting) {
@@ -150,15 +142,23 @@ function _checkForWaitingGames(sessionID, request, gamesAwaiting) {
 	
 }
 
+app.all('/socket.io', function(req, res){
+	console.log(req);
+});
 
-app.all('/game/nick/:nick/item/:item', function (req, res) {
+app.all('/game/getsession', function(req, res){
 	var sessionID = req.sessionID;
+	res.send({sessionID: sessionID});
+});
+
+app.all('/game/nick/:nick/item/:item/sessionid/:sessionid', function (req, res) {
+	var sessionID = req.params.sessionid;
 	var gameToPlay = _checkForWaitingGames(sessionID, req, gamesAwaiting);
-	module.exports(socket);
-	socket.emit('init', {test: 'test'});
+	
 	if (gameToPlay) {
 		res.send(gameToPlay);
 	} else {
+		console.log(gameToPlay);
 		console.log('Currently no games... waiting for players');
 	}
 	
