@@ -1,4 +1,4 @@
-angular.module('rpsApp', ['ngResource']).
+angular.module('rpsApp', ['ngResource', 'btford.socket-io']).
 service('rpsManager', function(){
 	
 	var currentState;
@@ -86,6 +86,9 @@ service('rpsManager', function(){
 			}
 	};
 	
+}).
+factory('rpsSocket', function (socketFactory) {
+  return socketFactory();
 }).
 controller('rpsController', function($scope, rpsManager) {
 	
@@ -352,7 +355,8 @@ directive('rpsGameContainer', function(rpsManager, $resource){
 		}
 	}
 }).
-directive('rpsSelectPlayer', function(rpsManager, $resource){
+directive('rpsSelectPlayer', function(rpsManager, $resource, rpsSocket){
+	
 	return {
 		scope: true,
 		transclude: false,
@@ -376,8 +380,6 @@ directive('rpsSelectPlayer', function(rpsManager, $resource){
 							
 							var gamePlay = $resource("/game/nick/:nick/item/:item", {nick: '@nick', item: '@item'});
 							var gameData = gamePlay.save({nick: rpsManager.getPlayerNick(), item: rpsManager.getPlayerItem()});
-							
-							console.log('gameData zwrotka: ', gameData);
 							
 							gameData.$promise.then(function(result){
 								

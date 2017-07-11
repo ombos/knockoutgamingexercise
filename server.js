@@ -18,6 +18,13 @@ app.use(session({
     saveUninitialized: true
 }));
 
+module.exports = function (socket) {
+	socket.emit('init', {
+		test: 'test'
+	});
+
+};
+
 function generateGameId() {
 	
 	var gameId = "";
@@ -145,10 +152,10 @@ function _checkForWaitingGames(sessionID, request, gamesAwaiting) {
 
 
 app.all('/game/nick/:nick/item/:item', function (req, res) {
-	eventEmitter.emit('message');
 	var sessionID = req.sessionID;
 	var gameToPlay = _checkForWaitingGames(sessionID, req, gamesAwaiting);
-	
+	module.exports(socket);
+	socket.emit('init', {test: 'test'});
 	if (gameToPlay) {
 		res.send(gameToPlay);
 	} else {
