@@ -26,6 +26,16 @@
 	</head>
 	<body>
 		<div id="main" ng-controller="rpsController as rpsc">
+			<div class="static-menu" rps-static-menu>
+				<span class="element" ng-click="goToMainMenu()">
+					<i class="fa fa-bars" aria-hidden="true"></i>
+					<span class="text">MENU</span>
+				</span>
+				<span class="element" ng-click="goToHistory()">
+					<i class="fa fa-bar-chart" aria-hidden="true"></i>
+					<span class="text">HISTORY</span>
+				</span>
+			</div>
 			<ng-include src="data.stateData.template.file"></ng-include>
 		</div>
 		

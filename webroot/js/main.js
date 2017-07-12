@@ -209,6 +209,25 @@ controller('rpsController', function($scope, rpsManager) {
 	}
 	
 }).
+directive('rpsStaticMenu', function(){
+	
+	return {
+		scope: true,
+		transclude: false, 
+		link: function(scope, element, attrs){
+			
+			scope.goToMainMenu = function() {
+				scope.$emit('stateChange', 2);
+			}
+			
+			scope.goToHistory = function() {
+				scope.$emit('stateChange', 7);
+			}
+			
+		}
+	}
+	
+}).
 directive('rpsIntro', function(){
 	
 	return {
