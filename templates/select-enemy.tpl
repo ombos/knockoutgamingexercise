@@ -10,7 +10,7 @@
 			<div class="enemy" ng-click="selectEnemy('player')" ng-class="{selected: selectedEnemy=='player'}">
 				<span class="enemy-icon player"></span>
 				<span class="enemy-name">Player</span>
-				<div class="enemy-description">Play with real enemy, like any other online player or with your friend on this same computer</div>
+				<div class="enemy-description">Play with real enemy on this same computer</div>
 			</div>
 		</div>
 	</div>

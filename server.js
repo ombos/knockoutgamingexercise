@@ -1,13 +1,23 @@
-var express = require('express');
+var express = require('express'),
+	io = require('socket.io'),
+	http = require('http'),
+	app = express(),
+	server = http.createServer(app),
+	io = io.listen(server);
+
+server.listen(3000);	
+
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var events = require('events');
 var eventEmitter = new events.EventEmitter();
-var app = express();
-var gamesAwaiting = [];
-var gamesOnline = [];
 
+var gamesAwaiting = [];
+var gamesOnlineCheck = [];
+var getGamesOnline = function() {
+	return gamesOnlineCheck;
+}
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,6 +27,47 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+
+module.exports = function (io) {
+	'use strict';
+	io.on('connection', function (socket) {
+		console.log('connection to the server');
+		socket.on('message', function (from, msg) {
+
+			console.log('recieved message from', 
+			from, 'msg', JSON.stringify(msg));
+
+			console.log('broadcasting message');
+			console.log('payload is', msg);
+			io.sockets.emit('broadcast', {
+			payload: msg,
+			source: from
+			});
+			console.log('broadcast complete');
+		});
+	});
+};
+
+io.on('connection', function(socket) {
+	
+	socket.on('onlinecallback', function (data){
+		
+		console.log('is really online callback for game id ' + data.gameId);
+		console.log(gamesOnlineCheck);
+		
+		if (data.gameId != undefined) {
+			if (gamesOnlineCheck.length > 0) {
+
+				for (i=0; i<gamesOnlineCheck.length; i++) {
+					
+					if (gamesOnlineCheck[i] == data.gameId) {
+						gamesOnlineCheck.splice(i, 1);
+					}
+				}
+			}
+		}
+	});	
+});
 
 function generateGameId() {
 	
@@ -33,23 +84,6 @@ function generateGameId() {
 		generateGameId();
 	}
 
-}
-
-function deleteGameId(gameId, type, gamesAwaiting, gamesOnline) {
-	
-	if (gameId != undefined && type != undefined) {
-		if (type == 1) {
-			if (gamesAwaiting != undefined) {
-				//---
-			}
-		} else if (type == 2) {
-			if (gamesOnline != undefined) {
-				//---
-			}
-		}
-	}
-	
-	return true;
 }
 
 function _checkUnique(gameId, gamesAwaiting) {
@@ -72,8 +106,29 @@ function _randomIt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function _checkStillOnline(gameId) {
-	return true;
+function _checkStillOnline(gameObject, gamesOnlineCheck, io) {
+	
+	gamesOnlineCheck.push(gameObject.gameId);
+	console.log('Tablice po wpisaniu do sprawdzenia gameid');
+	console.log(getGamesOnline());
+	io.sockets.emit('checkonline', {
+		gameData: gameObject
+	});
+	
+	setTimeout(function(){
+		var toParse = getGamesOnline();
+		
+		if (toParse.length > 0) {
+			for (i = 0; i< toParse.length-1; i++) {
+				if (toParse[i] == gameObject.gameId) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+		
+	}, 3000);	
 }
 
 function _createGame(sessionID, request, gamesAwaiting) {
@@ -94,16 +149,14 @@ function _createGame(sessionID, request, gamesAwaiting) {
 }
 
 function _deleteGame(gameId, gamesAwaiting) {
-	console.log('delete game init: '+gameId);
-	console.log('games before:', gamesAwaiting);
+
 	if (gameId != undefined) {
 		if (gamesAwaiting.length > 0) {
 
 			for (i=0; i<gamesAwaiting.length; i++) {
 				
 				if (gamesAwaiting[i].gameId == gameId) {
-					gamesAwaiting.splice(i, 1);					
-					console.log('games after: ', gamesAwaiting);
+					gamesAwaiting.splice(i, 1);
 					return true;
 				}
 			}
@@ -112,26 +165,25 @@ function _deleteGame(gameId, gamesAwaiting) {
 	} else return false;
 }
 
-function _checkForWaitingGames(sessionID, request, gamesAwaiting) {
+function _checkForWaitingGames(sessionID, request, gamesAwaiting, gamesOnlineCheck, io) {
 	
 	if (sessionID != undefined) {
-		console.log('Session ID: '+sessionID);
+		
 		if (gamesAwaiting.length > 0) {
-			console.log('Games awaiting more than one');
+			
 			var randomKey = _randomIt(0, gamesAwaiting.length-1);
 			var gameToPlay = gamesAwaiting[randomKey];
 			
-			console.log('SID: ' +gameToPlay.sessionID+ ' My session:' +sessionID);
-			
 			if (gameToPlay.sessionID != sessionID) {
-				if (_checkStillOnline(gamesAwaiting[randomKey].gameId) == true) {
+				if (_checkStillOnline(gamesAwaiting[randomKey], gamesOnlineCheck, io) == true) {
 					return gamesAwaiting[randomKey];
 				} else {
-					_checkForWaitingGames(sessionID, request, gamesAwaiting);
+					_deleteGame(gameToPlay.gameId, gamesAwaiting);
+					_checkForWaitingGames(sessionID, request, gamesAwaiting, gamesOnlineCheck, io);
 				}
 			} else {
 				if (gamesAwaiting.length > 1) {
-					_checkForWaitingGames(sessionID, request, gamesAwaiting);
+					_checkForWaitingGames(sessionID, request, gamesAwaiting, gamesOnlineCheck, io);
 				} else return false;
 			}
 		} else {
@@ -142,10 +194,6 @@ function _checkForWaitingGames(sessionID, request, gamesAwaiting) {
 	
 }
 
-app.all('/socket.io', function(req, res){
-	console.log(req);
-});
-
 app.all('/game/getsession', function(req, res){
 	var sessionID = req.sessionID;
 	res.send({sessionID: sessionID});
@@ -153,31 +201,30 @@ app.all('/game/getsession', function(req, res){
 
 app.all('/game/nick/:nick/item/:item/sessionid/:sessionid', function (req, res) {
 	var sessionID = req.params.sessionid;
-	var gameToPlay = _checkForWaitingGames(sessionID, req, gamesAwaiting);
+	var gameToPlay = _checkForWaitingGames(sessionID, req, gamesAwaiting, gamesOnlineCheck, io);
 	
 	if (gameToPlay) {
-		res.send(gameToPlay);
-	} else {
+		console.log('Game to play object: ');
 		console.log(gameToPlay);
+		player2 = {
+			gameId: gameToPlay.gameId,
+			nick: req.params.nick,
+			item: req.params.item,
+			sessionid: req.params.sessionid
+		};
+		
+		_deleteGame(gameToPlay.gameId, gamesAwaiting);
+		
+		io.sockets.emit('broadcast', {
+			gameData: gameToPlay,
+			player2: player2
+		});
+		
+		res.send(gameToPlay);
+		
+	} else {
+		res.send(false);
 		console.log('Currently no games... waiting for players');
 	}
 	
-});
-
-//---@TODO: zamienic to all na get albo post
-app.all('/game/deletegame/:gameid', function(req, res){
-	if (req.params.gameid) {
-		if (_deleteGame(req.params.gameid, gamesAwaiting)) {
-			res.send(true);
-			console.log(gamesAwaiting);
-		} else return false;
-	} else return false;
-	
-})
-
-
-var port = process.env.OPENSHIFT_NODEJS_PORT || 8080
-, ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
-app.listen(port, ip, function() {
-  console.log('Server listening on %d', port);
 });

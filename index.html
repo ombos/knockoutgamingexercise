@@ -27,6 +27,9 @@
 	<body>
 		<div id="main" ng-controller="rpsController as rpsc">
 			<div class="static-menu" rps-static-menu>
+				<span class="element nick" ng-show="playernick">
+					<h3>{{playernick}}</h3>
+				</span>
 				<span class="element" ng-click="goToMainMenu()">
 					<i class="fa fa-bars" aria-hidden="true"></i>
 					<span class="text">MENU</span>

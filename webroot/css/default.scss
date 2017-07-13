@@ -60,6 +60,16 @@ html, body {
 			
 		}
 		
+		&.nick {
+			
+			h3 {
+				margin-top: 0;
+				font-weight: bold;
+				color: #000;
+				font-size: 36px;
+			}
+		}
+		
 		.text {
 			font-size: 12px;
 			opacity: 0;
