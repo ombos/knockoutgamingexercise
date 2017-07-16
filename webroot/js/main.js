@@ -101,6 +101,7 @@ factory('rpsSocket', function (socketFactory) {
 	var socket = socketFactory();
 	socket.forward('broadcast');
 	socket.forward('checkonline');
+	socket.forward('playerslist');
 	
 	return socket;
 	
@@ -399,68 +400,55 @@ directive('rpsSelectPlayer', function(rpsManager, $resource, rpsSocket){
 		transclude: false,
 		link: function(scope, element, attrs) {
 			
-			TweenMax.to($('.rps_select_player'), 0.8, {css: {transform: "translateY(0vh)"}, ease:Power2.easeOut});
-			
-			scope.selectPlayer = function(player) {
+			rpsManager.setPlayerEnemy('player');
 				
-				if (player != '' && player != undefined) {
+			TweenMax.to($('.players-to-select'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
 					
-					rpsManager.setPlayerEnemy('player');
+				var mySession = $resource("/game/getsession");
+				var mySessionData = mySession.save();
+				
+				mySessionData.$promise.then(function(sessionData){
 					
-					TweenMax.to($('.players-to-select'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
-						
-						if (player == 'local') {
+					rpsManager.setMySessionId(sessionData.sessionID);
+					var gamePlay = $resource("/game/nick/:nick/item/:item/sessionid/:sessionid", {nick: '@nick', item: '@item', sessionid: '@sessionid'});
+					var gameData = gamePlay.save({
+							nick: rpsManager.getPlayerNick(), 
+							item: rpsManager.getPlayerItem(), 
+							sessionid: rpsManager.getMySessionId()
+						});
+					
+					gameData.$promise.then(
+						function (result) {
 							
-							// @TODO
-							TweenMax.to($('.local-play'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut});
-							
-						} else if (player == 'remote') {
-							
-							var mySession = $resource("/game/getsession");
-							var mySessionData = mySession.save();
-							
-							mySessionData.$promise.then(function(sessionData){
+							if (result.gameId != undefined && result.nick != undefined && result.item != undefined) {
 								
-								rpsManager.setMySessionId(sessionData.sessionID);
-								var gamePlay = $resource("/game/nick/:nick/item/:item/sessionid/:sessionid", {nick: '@nick', item: '@item', sessionid: '@sessionid'});
-								var gameData = gamePlay.save({
-										nick: rpsManager.getPlayerNick(), 
-										item: rpsManager.getPlayerItem(), 
-										sessionid: rpsManager.getMySessionId()
-									});
-								
-								gameData.$promise.then(
-									function (result) {
-										
-										if (result.gameId != undefined && result.nick != undefined && result.item != undefined) {
-											
-											rpsManager.setPlayerEnemyData({
-												gameId: result.gameId, 
-												nick: result.nick, 
-												item: result.item
-											});
-											TweenMax.to($('.rps_select_player'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
-												scope.$emit('stateChange', 5);
-											}}).delay(2);
-										}
-									}, 
-									function (error) {
-										console.log(error);
-									}, 
-									function (progress) {
-										console.log(progress);
-									});
-							});
-							
-							TweenMax.to($('.remote-play'), 0.8, {css: {transform: "translateY(-200vh)"}, ease:Power2.easeOut});
-						}
-					}});
-				}
-			}
+								rpsManager.setPlayerEnemyData({
+									gameId: result.gameId, 
+									nick: result.nick, 
+									item: result.item
+								});
+								TweenMax.to($('.rps_select_player'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
+									scope.$emit('stateChange', 5);
+								}}).delay(2);
+							}
+						}, 
+						function (error) {
+							console.log(error);
+						}, 
+						function (progress) {
+							console.log(progress);
+						});
+				});
+				
+				TweenMax.to($('.remote-play'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut});
+				
+			}});
+			
 			
 			scope.$on('socket:checkonline', function(event, data) {
 				
 				if (rpsManager.getMySessionId() == data.gameData.sessionID) {
+					console.log('onlinecallback emit');
 					rpsSocket.emit('onlinecallback', {gameId: data.gameData.gameId});
 				}
 			});
@@ -495,10 +483,26 @@ directive('rpsGameResult', function(rpsManager){
 			scope.playerLastGame = rpsManager.getPlayerLastGame();
 			
 			scope.playAgain = function(){
-				TweenMax.to($('.rps_game_result'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
-					scope.$emit('stateChange', 5);
+				TweenMax.to($('.results-container'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
+					//scope.$emit('stateChange', 5);
+					TweenMax.to($('.play-again'), 0.8, {css: {transform: "translateX(0vw)"}, ease:Power2.easeOut});
+					TweenMax.to($('.play-again'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut});
 				}});
 			};
+			
+			//--- @TODO: check for who you want to play computer or player if player another state than 5
+			scope.selectItem = function(item){
+				
+				if (item != '' && item != undefined) {
+					rpsManager.setPlayerItem(item);
+					
+					TweenMax.to($('.rps_game_result'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
+						scope.$emit('stateChange', 5);
+					}});
+					
+				}
+				
+			}
 			
 			scope.goToMainMenu = function(){
 				console.log('go main menu');

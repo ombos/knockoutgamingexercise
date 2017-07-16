@@ -589,63 +589,183 @@ html, body {
   width: 100%;
   height: 100%;
   background-color: #d8d8d8; }
-  .rps_game_result .results {
-    width: 100%;
+  .rps_game_result .results-container {
     display: flex;
+    width: 100%;
+    height: 100%;
     align-items: center;
     justify-content: center;
-    flex-wrap: nowrap; }
-    .rps_game_result .results .result-element {
+    flex-wrap: wrap; }
+    .rps_game_result .results-container .results {
+      width: 100%;
       display: flex;
-      flex-grow: 1;
       align-items: center;
       justify-content: center;
-      flex-wrap: wrap; }
-      .rps_game_result .results .result-element .you-message {
-        width: 100%;
-        font-size: 48px;
-        text-align: center; }
-      .rps_game_result .results .result-element .message {
-        font-size: 72px;
-        font-weight: bold; }
-        .rps_game_result .results .result-element .message.won {
-          color: #00a00e; }
-        .rps_game_result .results .result-element .message.lost {
-          color: #ff0033; }
-        .rps_game_result .results .result-element .message.draw {
-          color: #d0c100; }
-      .rps_game_result .results .result-element .player-details {
-        width: 100%;
-        text-align: center;
-        font-size: 36px; }
-        .rps_game_result .results .result-element .player-details span {
-          font-size: 28px; }
-      .rps_game_result .results .result-element .item .item-icon {
-        display: block;
-        width: 80px;
-        height: 80px;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center center;
-        margin-top: 30px; }
-        .rps_game_result .results .result-element .item .item-icon.rock {
-          background-image: url("../images/rock_icon.png"); }
-        .rps_game_result .results .result-element .item .item-icon.paper {
-          background-image: url("../images/paper_icon.png"); }
-        .rps_game_result .results .result-element .item .item-icon.scissors {
-          background-image: url("../images/scissors_icon.png"); }
-        .rps_game_result .results .result-element .item .item-icon.waiting {
-          background-image: url("../images/quest_icon.png"); }
-      .rps_game_result .results .result-element .item .item-name {
-        display: block;
-        width: 100%;
-        text-align: center;
-        text-transform: uppercase;
-        font-size: 16px;
-        margin-top: 30px; }
-  .rps_game_result .navigation {
-    width: 100%;
-    text-align: center; }
+      flex-wrap: nowrap; }
+      .rps_game_result .results-container .results .result-element {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap; }
+        .rps_game_result .results-container .results .result-element .you-message {
+          width: 100%;
+          font-size: 48px;
+          text-align: center; }
+        .rps_game_result .results-container .results .result-element .message {
+          font-size: 72px;
+          font-weight: bold; }
+          .rps_game_result .results-container .results .result-element .message.won {
+            color: #00a00e; }
+          .rps_game_result .results-container .results .result-element .message.lost {
+            color: #ff0033; }
+          .rps_game_result .results-container .results .result-element .message.draw {
+            color: #d0c100; }
+        .rps_game_result .results-container .results .result-element .player-details {
+          width: 100%;
+          text-align: center;
+          font-size: 36px; }
+          .rps_game_result .results-container .results .result-element .player-details span {
+            font-size: 28px; }
+        .rps_game_result .results-container .results .result-element .item .item-icon {
+          display: block;
+          width: 80px;
+          height: 80px;
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center center;
+          margin-top: 30px; }
+          .rps_game_result .results-container .results .result-element .item .item-icon.rock {
+            background-image: url("../images/rock_icon.png"); }
+          .rps_game_result .results-container .results .result-element .item .item-icon.paper {
+            background-image: url("../images/paper_icon.png"); }
+          .rps_game_result .results-container .results .result-element .item .item-icon.scissors {
+            background-image: url("../images/scissors_icon.png"); }
+          .rps_game_result .results-container .results .result-element .item .item-icon.waiting {
+            background-image: url("../images/quest_icon.png"); }
+        .rps_game_result .results-container .results .result-element .item .item-name {
+          display: block;
+          width: 100%;
+          text-align: center;
+          text-transform: uppercase;
+          font-size: 16px;
+          margin-top: 30px; }
+    .rps_game_result .results-container .navigation {
+      width: 100%;
+      text-align: center; }
+  .rps_game_result .play-again {
+    transform: translateY(-100vw);
+    display: flex;
+    flex-wrap: wrap;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background-color: #d8d8d8; }
+    .rps_game_result .play-again h1 {
+      width: 100%;
+      text-align: center; }
+    .rps_game_result .play-again .items {
+      display: flex;
+      width: 90vw; }
+      .rps_game_result .play-again .items .item {
+        display: flex;
+        flex-grow: 1;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        border: 1px solid #aaa;
+        margin-left: 4vw;
+        position: relative;
+        transition: 0.4s ease all 0s;
+        -webkit-transition: 0.4s ease all 0s;
+        -moz-transition: 0.4s ease all 0s;
+        -ms-transition: 0.4s ease all 0s;
+        -o-transition: 0.4s ease all 0s; }
+        .rps_game_result .play-again .items .item .item-name {
+          display: block;
+          text-align: center;
+          width: 100%;
+          text-transform: uppercase;
+          font-size: 16px;
+          font-weight: 300;
+          padding: 30px 30px;
+          position: relative; }
+        .rps_game_result .play-again .items .item .item-icon {
+          display: block;
+          width: 180px;
+          height: 180px;
+          background-size: 70%;
+          background-repeat: no-repeat;
+          background-position: center center;
+          transition: 0.4s ease all 0s;
+          -webkit-transition: 0.4s ease all 0s;
+          -moz-transition: 0.4s ease all 0s;
+          -ms-transition: 0.4s ease all 0s;
+          -o-transition: 0.4s ease all 0s; }
+          .rps_game_result .play-again .items .item .item-icon.rock {
+            background-image: url("../images/rock_icon.png"); }
+          .rps_game_result .play-again .items .item .item-icon.paper {
+            background-image: url("../images/paper_icon.png"); }
+          .rps_game_result .play-again .items .item .item-icon.scissors {
+            background-image: url("../images/scissors_icon.png"); }
+        .rps_game_result .play-again .items .item .item-description {
+          position: absolute;
+          top: 0;
+          left: -1px;
+          right: -1px;
+          padding: 14px 0;
+          color: #fff;
+          transform: translateY(-49px);
+          opacity: 0;
+          transition: 0.4s ease all 0s;
+          -webkit-transition: 0.4s ease all 0s;
+          -moz-transition: 0.4s ease all 0s;
+          -ms-transition: 0.4s ease all 0s;
+          -o-transition: 0.4s ease all 0s; }
+          .rps_game_result .play-again .items .item .item-description:before {
+            content: " ";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            top: 0;
+            width: 0%;
+            background: #1e5677;
+            z-index: -1;
+            transition: 0.4s ease all 0s;
+            -webkit-transition: 0.4s ease all 0s;
+            -moz-transition: 0.4s ease all 0s;
+            -ms-transition: 0.4s ease all 0s;
+            -o-transition: 0.4s ease all 0s; }
+          .rps_game_result .play-again .items .item .item-description .loses {
+            width: 50%;
+            float: right;
+            text-align: center; }
+            .rps_game_result .play-again .items .item .item-description .loses i {
+              color: #ff0033; }
+          .rps_game_result .play-again .items .item .item-description .wins {
+            width: 50%;
+            float: left;
+            text-align: center; }
+            .rps_game_result .play-again .items .item .item-description .wins i {
+              color: #03bb03; }
+        .rps_game_result .play-again .items .item:hover {
+          border-color: #1e5677; }
+          .rps_game_result .play-again .items .item:hover .item-name {
+            color: #1e5677; }
+          .rps_game_result .play-again .items .item:hover .item-icon {
+            background-size: 85%;
+            -webkit-transform: rotate(15deg);
+            -moz-transform: rotate(15deg);
+            -o-transform: rotate(15deg);
+            -ms-transform: rotate(15deg);
+            transform: rotate(15deg); }
+          .rps_game_result .play-again .items .item:hover .item-description {
+            opacity: 1; }
+            .rps_game_result .play-again .items .item:hover .item-description:before {
+              width: 100%; }
 
 .rps_games_history {
   display: flex;

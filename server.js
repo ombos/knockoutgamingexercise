@@ -14,6 +14,9 @@ var events = require('events');
 var eventEmitter = new events.EventEmitter();
 
 var gamesAwaiting = [];
+var getGamesAwaiting = function() {
+	return gamesAwaiting;
+}
 var gamesOnlineCheck = [];
 var getGamesOnline = function() {
 	return gamesOnlineCheck;
@@ -45,15 +48,15 @@ module.exports = function (io) {
 			});
 			console.log('broadcast complete');
 		});
+		
 	});
 };
 
 io.on('connection', function(socket) {
 	
+	console.log('connection to the server');
+	
 	socket.on('onlinecallback', function (data){
-		
-		console.log('is really online callback for game id ' + data.gameId);
-		console.log(gamesOnlineCheck);
 		
 		if (data.gameId != undefined) {
 			if (gamesOnlineCheck.length > 0) {
@@ -66,7 +69,19 @@ io.on('connection', function(socket) {
 				}
 			}
 		}
-	});	
+	});
+	
+	socket.on('playersonline', function() {
+		console.log('pobieram liste graczy online');
+		io.sockets.emit('playerslist', {list: getGamesAwaiting()});
+	});
+	
+	socket.on('disconnected', function() {
+
+		console.log('disconnection from socket');
+
+	});
+	
 });
 
 function generateGameId() {
@@ -115,9 +130,11 @@ function _checkStillOnline(gameObject, gamesOnlineCheck, io) {
 		gameData: gameObject
 	});
 	
+	return true;
+	
 	setTimeout(function(){
+
 		var toParse = getGamesOnline();
-		
 		if (toParse.length > 0) {
 			for (i = 0; i< toParse.length-1; i++) {
 				if (toParse[i] == gameObject.gameId) {
@@ -170,19 +187,21 @@ function _checkForWaitingGames(sessionID, request, gamesAwaiting, gamesOnlineChe
 	if (sessionID != undefined) {
 		
 		if (gamesAwaiting.length > 0) {
-			
 			var randomKey = _randomIt(0, gamesAwaiting.length-1);
 			var gameToPlay = gamesAwaiting[randomKey];
-			
+	
 			if (gameToPlay.sessionID != sessionID) {
 				if (_checkStillOnline(gamesAwaiting[randomKey], gamesOnlineCheck, io) == true) {
+					console.log('checkstillonline zwraca TRUE');
+					console.log(gamesAwaiting[randomKey]);
 					return gamesAwaiting[randomKey];
 				} else {
+					console.log('checkstillonline zwraca FALSE');
 					_deleteGame(gameToPlay.gameId, gamesAwaiting);
 					_checkForWaitingGames(sessionID, request, gamesAwaiting, gamesOnlineCheck, io);
 				}
 			} else {
-				if (gamesAwaiting.length > 1) {
+				if (gamesAwaiting.length > 0) {
 					_checkForWaitingGames(sessionID, request, gamesAwaiting, gamesOnlineCheck, io);
 				} else return false;
 			}

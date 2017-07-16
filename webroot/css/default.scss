@@ -756,54 +756,155 @@ html, body {
 	height: 100%;
 	background-color: #d8d8d8;
 	
-	.results {
-		width: 100%;
+	.results-container {
+		
 		display: flex;
+		width: 100%;
+		height: 100%;
 		align-items: center;
 		justify-content: center;
-		flex-wrap: nowrap;
+		flex-wrap: wrap;
 		
-		.result-element {
+		.results {
+			width: 100%;
 			display: flex;
-			flex-grow: 1;
 			align-items: center;
 			justify-content: center;
-			flex-wrap: wrap;
+			flex-wrap: nowrap;
 			
-			.you-message {
-				width: 100%;
-				font-size: 48px;
-				text-align: center;
-			}
-			
-			.message {
-				font-size: 72px;
-				font-weight: bold;
+			.result-element {
+				display: flex;
+				flex-grow: 1;
+				align-items: center;
+				justify-content: center;
+				flex-wrap: wrap;
 				
-				&.won { color: #00a00e; }
-				&.lost { color: #ff0033; }
-				&.draw { color: #d0c100; }
-			}
-				
-			.player-details {
-				width: 100%;
-				text-align: center;
-				font-size: 36px;
-				
-				span {
-					font-size: 28px;
+				.you-message {
+					width: 100%;
+					font-size: 48px;
+					text-align: center;
 				}
+				
+				.message {
+					font-size: 72px;
+					font-weight: bold;
+					
+					&.won { color: #00a00e; }
+					&.lost { color: #ff0033; }
+					&.draw { color: #d0c100; }
+				}
+					
+				.player-details {
+					width: 100%;
+					text-align: center;
+					font-size: 36px;
+					
+					span {
+						font-size: 28px;
+					}
+				}
+				
+				.item {
+					.item-icon {
+						display: block;
+						width: 80px;
+						height: 80px;
+						background-size: contain;
+						background-repeat: no-repeat;
+						background-position: center center;
+						margin-top: 30px;
+						
+						&.rock {
+							background-image: url('../images/rock_icon.png');
+						}
+						
+						&.paper {
+							background-image: url('../images/paper_icon.png');
+						}
+						
+						&.scissors {
+							background-image: url('../images/scissors_icon.png');
+						}
+						
+						&.waiting {
+							background-image: url('../images/quest_icon.png');
+						}
+					}
+					
+					.item-name {
+						display: block;
+						width: 100%;
+						text-align: center;
+						text-transform: uppercase;
+						font-size: 16px;
+						margin-top: 30px;
+					}
+				}
+				
+				
 			}
+			
+		}
+		
+		.navigation {
+			width: 100%;
+			text-align: center;
+		}
+	}
+	
+	.play-again {
+		transform: translateY(-100vw);
+		display: flex;
+		flex-wrap: wrap;
+		width: 100vw;
+		height: 100vh;
+		align-items: center;
+		justify-content: center;
+		background-color: #d8d8d8;
+		
+		h1 {
+			width: 100%;
+			text-align: center;
+		}
+		
+		.items {
+			display: flex;
+			width: 90vw;
 			
 			.item {
+				display: flex;
+				flex-grow: 1;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				position: relative;
+				border: 1px solid #aaa;
+				margin-left: 4vw;
+				position: relative;
+				@include animate_it();
+				
+				.item-name {
+					display: block;
+					text-align: center;
+					width: 100%;
+					text-transform: uppercase;
+					font-size: 16px;
+					font-weight: 300;
+					padding: 30px 30px;
+					position: relative;
+
+				}
+				
 				.item-icon {
 					display: block;
-					width: 80px;
-					height: 80px;
-					background-size: contain;
+					width: 180px;
+					height: 180px;
+					background-size: 70%;
 					background-repeat: no-repeat;
 					background-position: center center;
-					margin-top: 30px;
+					
+					@include animate_it();
 					
 					&.rock {
 						background-image: url('../images/rock_icon.png');
@@ -817,29 +918,79 @@ html, body {
 						background-image: url('../images/scissors_icon.png');
 					}
 					
-					&.waiting {
-						background-image: url('../images/quest_icon.png');
+				}
+				
+				.item-description {
+					position: absolute;
+					top: 0;
+					left: -1px;
+					right: -1px;
+					padding: 14px 0;
+					color: #fff;
+					transform: translateY(-49px);
+					opacity: 0;
+					
+					&:before {
+						content: " ";
+						position: absolute;
+						left: 0;
+						bottom: 0;
+						top: 0;
+						width: 0%;
+						background: rgba(30,86,119, 1);
+						z-index: -1;
+						
+						@include animate_it();
+					}
+					
+					@include animate_it();
+					
+					.loses {
+						width: 50%;
+						float: right;
+						text-align: center;
+						
+						i {
+							color: #ff0033;
+						}
+					}
+					
+					.wins {
+						width: 50%;
+						float: left;
+						text-align: center;
+						
+						i {
+							color: #03bb03;
+						}
+							
 					}
 				}
 				
-				.item-name {
-					display: block;
-					width: 100%;
-					text-align: center;
-					text-transform: uppercase;
-					font-size: 16px;
-					margin-top: 30px;
+				&:hover {
+					border-color: rgba(30,86,119, 1);
+					
+					.item-name {
+						color: rgba(30,86,119, 1);
+					}
+					
+					.item-icon {
+						background-size: 85%;
+						@include rotate_it(15deg);
+					}
+					
+					.item-description {
+						
+						opacity: 1;
+						
+						&:before {
+							width: 100%;
+						}
+					}
 				}
 			}
-			
-			
 		}
 		
-	}
-	
-	.navigation {
-		width: 100%;
-		text-align: center;
 	}
 	
 }
