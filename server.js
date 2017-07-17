@@ -17,10 +17,12 @@ var gamesAwaiting = [];
 var getGamesAwaiting = function() {
 	return gamesAwaiting;
 }
+
 var gamesOnlineCheck = [];
-var getGamesOnline = function() {
+var getGamesOnlineCheck = function() {
 	return gamesOnlineCheck;
 }
+
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,57 +33,56 @@ app.use(session({
     saveUninitialized: true
 }));
 
-module.exports = function (io) {
-	'use strict';
-	io.on('connection', function (socket) {
-		console.log('connection to the server');
-		socket.on('message', function (from, msg) {
-
-			console.log('recieved message from', 
-			from, 'msg', JSON.stringify(msg));
-
-			console.log('broadcasting message');
-			console.log('payload is', msg);
-			io.sockets.emit('broadcast', {
-			payload: msg,
-			source: from
-			});
-			console.log('broadcast complete');
-		});
-		
-	});
-};
-
 io.on('connection', function(socket) {
 	
 	console.log('connection to the server');
 	
-	socket.on('onlinecallback', function (data){
+	socket.emit('setid', socket.id);
+	
+	socket.on('disconnect', function() {
+		console.log('Disconnection, deleting game with socket ID: ' + socket.id);
+		var gamesAwaiting = getGamesAwaiting();
 		
-		if (data.gameId != undefined) {
-			if (gamesOnlineCheck.length > 0) {
-
-				for (i=0; i<gamesOnlineCheck.length; i++) {
-					
-					if (gamesOnlineCheck[i] == data.gameId) {
-						gamesOnlineCheck.splice(i, 1);
-					}
+		if (gamesAwaiting.length >0) {
+			for (i=0; i<gamesAwaiting.length; i++) {
+				if (gamesAwaiting[i].socketID == socket.id) {
+					gamesAwaiting.splice(i, 1);
+					console.log('Game deleted by socket');
 				}
 			}
 		}
+		
 	});
 	
-	socket.on('playersonline', function() {
-		console.log('pobieram liste graczy online');
-		io.sockets.emit('playerslist', {list: getGamesAwaiting()});
-	});
-	
-	socket.on('disconnected', function() {
+	socket.on('onlinecallback', function (data){
+		
+		if (data.gameObject.gameId != undefined) {
+				
+			var gamesToCheck = getGamesOnlineCheck();
+				
+			if (gamesToCheck.length > 0) {
+				
+				for (i=0; i<gamesToCheck.length; i++) {
+					
+					if (gamesToCheck[i] == data.gameObject.gameId) {
+						gamesToCheck.splice(i, 1);
+					}
+				}
+			}	
 
-		console.log('disconnection from socket');
+			player2 = {
+				gameId: data.player2.gameId,
+				nick: data.player2.nick,
+				item: data.player2.item,
+				sessionid: data.player2.sessionid
+			};
 
+			io.sockets.emit('broadcast', {
+				gameData: data.gameObject,
+				player2: player2
+			});
+		}
 	});
-	
 });
 
 function generateGameId() {
@@ -121,42 +122,50 @@ function _randomIt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function _checkStillOnline(gameObject, gamesOnlineCheck, io) {
+function _sleep(miliseconds) {
+  
+  var currentTime = new Date().getTime();
+  while (currentTime + miliseconds >= new Date().getTime()) {}
+  
+}
+
+function _checkStillOnline(gameObject, gamesOnlineCheck, io, player2) {
 	
 	gamesOnlineCheck.push(gameObject.gameId);
-	console.log('Tablice po wpisaniu do sprawdzenia gameid');
-	console.log(getGamesOnline());
 	io.sockets.emit('checkonline', {
-		gameData: gameObject
+		gameObject: gameObject,
+		player2: player2
 	});
-	
-	return true;
-	
-	setTimeout(function(){
+}
 
-		var toParse = getGamesOnline();
-		if (toParse.length > 0) {
-			for (i = 0; i< toParse.length-1; i++) {
-				if (toParse[i] == gameObject.gameId) {
-					return false;
-				}
+function _gameOnlineCallback(gameId) {
+	
+	if (gameId != undefined) {
+		var gamesToCheck = getGamesOnlineCheck();
+		console.log('Sprawdzenie dla gry: ' + gameId);
+		console.log(gamesToCheck);
+		for (var i = 0; i < gamesToCheck.length; i++) {
+			if (gamesToCheck[i] == gameId) {
+				console.error('GAME ID SIE POKRYWA NIE WOLNO TRUE');
+				break;
+				return false;
 			}
 		}
-		
+		console.log('gra sprawdzona zwrotka true');
 		return true;
-		
-	}, 3000);	
+	}
 }
 
 function _createGame(sessionID, request, gamesAwaiting) {
-	
+	console.log('Creating game');
 	if (request != undefined) {
 		
 		var gameCreated = {
 			gameId: generateGameId(),
 			nick: request.params.nick,
 			item: request.params.item,
-			sessionID: sessionID
+			sessionID: sessionID,
+			socketID: request.params.socketid
 		};
 		
 		gamesAwaiting.push(gameCreated);
@@ -165,15 +174,18 @@ function _createGame(sessionID, request, gamesAwaiting) {
 	} else return false;
 }
 
-function _deleteGame(gameId, gamesAwaiting) {
+function _deleteGame(gameId) {
 
 	if (gameId != undefined) {
+		var gamesAwaiting = getGamesAwaiting();
 		if (gamesAwaiting.length > 0) {
 
 			for (i=0; i<gamesAwaiting.length; i++) {
 				
 				if (gamesAwaiting[i].gameId == gameId) {
 					gamesAwaiting.splice(i, 1);
+					console.log('Gra ' +gameId+ ' zostala skasowana');
+					console.log(gamesAwaiting);
 					return true;
 				}
 			}
@@ -185,23 +197,22 @@ function _deleteGame(gameId, gamesAwaiting) {
 function _checkForWaitingGames(sessionID, request, gamesAwaiting, gamesOnlineCheck, io) {
 	
 	if (sessionID != undefined) {
-		
 		if (gamesAwaiting.length > 0) {
 			var randomKey = _randomIt(0, gamesAwaiting.length-1);
 			var gameToPlay = gamesAwaiting[randomKey];
 	
 			if (gameToPlay.sessionID != sessionID) {
-				if (_checkStillOnline(gamesAwaiting[randomKey], gamesOnlineCheck, io) == true) {
-					console.log('checkstillonline zwraca TRUE');
-					console.log(gamesAwaiting[randomKey]);
+				_checkStillOnline(gamesAwaiting[randomKey], gamesOnlineCheck, io, request.params);
+				
+				if (_gameOnlineCallback(gameToPlay.gameId) == true) {
 					return gamesAwaiting[randomKey];
 				} else {
-					console.log('checkstillonline zwraca FALSE');
-					_deleteGame(gameToPlay.gameId, gamesAwaiting);
+					_deleteGame(gameToPlay.gameId);
 					_checkForWaitingGames(sessionID, request, gamesAwaiting, gamesOnlineCheck, io);
 				}
+				
 			} else {
-				if (gamesAwaiting.length > 0) {
+				if (gamesAwaiting.length > 1) {
 					_checkForWaitingGames(sessionID, request, gamesAwaiting, gamesOnlineCheck, io);
 				} else return false;
 			}
@@ -210,7 +221,6 @@ function _checkForWaitingGames(sessionID, request, gamesAwaiting, gamesOnlineChe
 			return false;
 		}
 	} else return false;
-	
 }
 
 app.all('/game/getsession', function(req, res){
@@ -218,29 +228,15 @@ app.all('/game/getsession', function(req, res){
 	res.send({sessionID: sessionID});
 });
 
-app.all('/game/nick/:nick/item/:item/sessionid/:sessionid', function (req, res) {
+app.all('/game/nick/:nick/item/:item/sessionid/:sessionid/socketid/:socketid', function (req, res) {
 	var sessionID = req.params.sessionid;
 	var gameToPlay = _checkForWaitingGames(sessionID, req, gamesAwaiting, gamesOnlineCheck, io);
 	
 	if (gameToPlay) {
 		console.log('Game to play object: ');
 		console.log(gameToPlay);
-		player2 = {
-			gameId: gameToPlay.gameId,
-			nick: req.params.nick,
-			item: req.params.item,
-			sessionid: req.params.sessionid
-		};
-		
-		_deleteGame(gameToPlay.gameId, gamesAwaiting);
-		
-		io.sockets.emit('broadcast', {
-			gameData: gameToPlay,
-			player2: player2
-		});
-		
 		res.send(gameToPlay);
-		
+		_deleteGame(gameToPlay.gameId);
 	} else {
 		res.send(false);
 		console.log('Currently no games... waiting for players');
