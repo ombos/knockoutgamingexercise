@@ -1,8 +1,12 @@
 {
-  "name": "Bart Kwiecinski",
-  "description": "Rock, paper, scissors - Knockout Gaming APP Exercise",
-  "version": "0.0.1",
-  "private": true,
+  "name": "rps",
+  "version": "1.0.0",
+  "description": "Knockout Gaming Excersie",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
   "dependencies": {
     "angular": "^1.6.5",
     "angular-resource": "^1.6.5",
@@ -17,5 +21,15 @@
     "jquery": "^3.2.1",
     "npm": "^5.2.0",
     "socket.io": "^2.0.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ombos/knockoutgamingexercise.git"
+  },
+  "author": "bartosz kwiecinski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ombos/knockoutgamingexercise/issues"
+  },
+  "homepage": "https://github.com/ombos/knockoutgamingexercise#readme"
 }
