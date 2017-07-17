@@ -2,7 +2,7 @@
 	<div class="games">
 		<h1>Your games history: </h1>
 		
-		<table class="table">
+		<table class="table" ng-if="gamesHistory.length > 0">
 			<thead>
 				<th>game id</th>
 				<th>item</th>
@@ -24,6 +24,10 @@
 				</tr>
 			</tbody>
 		</table>
+		
+		<p>Wons: <strong>{{stats.wons}} </strong> | Draws: <strong>{{stats.draws}}</strong> | Losts: <strong>{{stats.losts}}</strong></p>
+		
+		<p ng-if="gamesHistory.length < 1">Currently you didn't play any game...</p>
 		
 		<button class="btn btn-lg btn-primary" ng-click="goToMainMenu()">Go to main menu</button>
 	</div>

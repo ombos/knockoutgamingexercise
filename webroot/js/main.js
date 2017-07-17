@@ -553,6 +553,7 @@ directive('rpsGamesHistory', function(rpsManager){
 			
 			TweenMax.to($('.rps_games_history'), 0.8, {css: {transform: "translateY(0vh)"}, ease:Power2.easeOut});
 			scope.gamesHistory = rpsManager.getPlayerGameHistory();
+			scope.stats = _prepareHistoryStats();
 			
 			scope.goToMainMenu = function(){
 				TweenMax.to($('.rps_games_history'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
@@ -560,6 +561,31 @@ directive('rpsGamesHistory', function(rpsManager){
 				}});
 			};
 			
+			function _prepareHistoryStats() {
+				
+				if (scope.gamesHistory.length > 0) {
+					
+					var won = [];
+					var lost = [];
+					var draw = [];
+					
+					for (i=0; i<scope.gamesHistory.length; i++) {
+						if (scope.gamesHistory[i].gameResult == 1) {
+							won.push(true);
+						} else if (scope.gamesHistory[i].gameResult == -1) {
+							draw.push(true);
+						} else if (scope.gamesHistory[i].gameResult == 0) {
+							lost.push(true);
+						}
+					}
+					
+					return {
+						wons: won.length,
+						draws: draw.length,
+						losts: lost.length
+					};
+				}
+			}
 		}
 	}
 });

@@ -15,9 +15,9 @@
 			
 			<div class="result-element score">
 				<p class="you-message">You</p>
-				<p ng-show="playerLastGame.gameResult == 1" class="message won">WON</p>
-				<p ng-show="playerLastGame.gameResult == 0" class="message lost">LOST</p>
-				<p ng-show="playerLastGame.gameResult == -1" class="message draw">DRAW</p>
+				<p ng-show="playerLastGame.gameResult == 1" class="message won"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> WON</p>
+				<p ng-show="playerLastGame.gameResult == 0" class="message lost"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> LOST</p>
+				<p ng-show="playerLastGame.gameResult == -1" class="message draw"><i class="fa fa-hand-o-right" aria-hidden="true"></i> DRAW</p>
 			</div>
 			
 			<div class="result-element player2">
