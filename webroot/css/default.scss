@@ -32,6 +32,12 @@ html, body {
 	position: relative;
 }
 
+/*
+*
+* * * STATIC MENU * * * 
+*
+*/
+
 .static-menu {
 	position: absolute;
 	top: 0;
@@ -51,13 +57,11 @@ html, body {
 		text-align: center;
 		
 		&:hover {
-			
 			opacity: 1;
 			
 			.text {
 				opacity: 1;
 			}
-			
 		}
 		
 		&.nick {
@@ -74,14 +78,10 @@ html, body {
 			font-size: 12px;
 			opacity: 0;
 			display: block;
-			
 			@include animate_it();
 		}
-		
-		@include animate_it();
-		
+		@include animate_it();	
 	}
-	
 }
 
 /*
@@ -90,13 +90,10 @@ html, body {
 *
 */
 .rps_intro {
-	
 	.knockout_logo {
-		
 		height: 96vh;
 		
 		.letters {
-			
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -123,7 +120,6 @@ html, body {
 		}
 		
 		.word {
-			
 			display: flex;
 			flex: 1;
 			align-items: center;
@@ -145,7 +141,6 @@ html, body {
 				margin-top: 50px;
 			}
 		}
-		
 	}
 }
 
@@ -238,7 +233,6 @@ html, body {
 					font-weight: 300;
 					padding: 30px 30px;
 					position: relative;
-
 				}
 				
 				.item-icon {
@@ -248,7 +242,6 @@ html, body {
 					background-size: 70%;
 					background-repeat: no-repeat;
 					background-position: center center;
-					
 					@include animate_it();
 					
 					&.rock {
@@ -262,7 +255,6 @@ html, body {
 					&.scissors {
 						background-image: url('../images/scissors_icon.png');
 					}
-					
 				}
 				
 				.item-description {
@@ -287,7 +279,6 @@ html, body {
 						
 						@include animate_it();
 					}
-					
 					@include animate_it();
 					
 					.loses {
@@ -308,7 +299,6 @@ html, body {
 						i {
 							color: #03bb03;
 						}
-							
 					}
 				}
 				
@@ -325,7 +315,6 @@ html, body {
 					}
 					
 					.item-description {
-						
 						opacity: 1;
 						
 						&:before {
@@ -339,20 +328,20 @@ html, body {
 					
 					.item-name {
 						color: rgba(30,86,119, 1);
-					}
-					
-				}
-				
-			}
-			
+					}	
+				}	
+			}	
 		}
-		
 	}
-	
 }
 
+/*
+*
+* * * SELECT ENEMY * * * 
+*
+*/
+
 .rps_select_enemy {
-	
 	width: 100%;
 	height: 100%;
 	display: flex;
@@ -418,7 +407,6 @@ html, body {
 					&.player {
 						background-image: url('../images/player_icon.png');
 					}
-					
 				}
 				
 				.enemy-description {
@@ -429,9 +417,7 @@ html, body {
 					padding: 14px;
 					color: #fff;
 					transform: translateY(-49px);
-					
 					opacity: 0;
-					
 					@include animate_it();
 					
 					&:before {
@@ -445,7 +431,6 @@ html, body {
 						background: rgba(30,86,119, 1);
 						z-index: -1;
 						height: 50px;
-						
 						@include animate_it();
 					}
 				}
@@ -468,7 +453,6 @@ html, body {
 						&:before {
 							width: 100%;
 						}
-						
 					}
 				} 
 				
@@ -478,12 +462,17 @@ html, body {
 					.enemy-name {
 						color: rgba(30,86,119, 1);
 					}
-					
 				}
 			}
 		}
 	}
 }
+
+/*
+*
+* * * SELECT PLAYER * * * 
+*
+*/
 
 .rps_select_player {
 	
@@ -552,7 +541,6 @@ html, body {
 					&.remote {
 						background-image: url('../images/computer_remote_icon.png');
 					}
-					
 				}
 				
 				.player-description {
@@ -564,7 +552,6 @@ html, body {
 					color: #fff;
 					transform: translateY(-49px);
 					opacity: 0;
-					
 					@include animate_it();
 					
 					&:before {
@@ -576,10 +563,8 @@ html, body {
 						width: 0%;
 						background: rgba(30,86,119, 1);
 						z-index: -1;
-						
 						@include animate_it();
 					}
-					
 					@include animate_it();
 				}
 				
@@ -610,7 +595,6 @@ html, body {
 					.player-name {
 						color: rgba(30,86,119, 1);
 					}
-					
 				}
 			}
 		}
@@ -634,10 +618,8 @@ html, body {
 			
 			i {
 				font-size: 36px;
-			}
-			
+			}	
 		}
-		
 	}
 	
 	.local-play {
@@ -651,8 +633,13 @@ html, body {
 		height: 100%;
 		background-color: #d8d8d8;
 	}
-	
 }
+
+/*
+*
+* * * GAME CONTAINER * * * 
+*
+*/
 
 .rps_game_container {
 	display: flex;
@@ -750,6 +737,12 @@ html, body {
 	}
 }
 
+/*
+*
+* * * SELECT GAME RESULT * * * 
+*
+*/
+
 .rps_game_result {
 	display: flex;
 	flex-wrap: nowrap;
@@ -845,10 +838,7 @@ html, body {
 						margin-top: 30px;
 					}
 				}
-				
-				
 			}
-			
 		}
 		
 		.navigation {
@@ -898,7 +888,6 @@ html, body {
 					font-weight: 300;
 					padding: 30px 30px;
 					position: relative;
-
 				}
 				
 				.item-icon {
@@ -908,7 +897,6 @@ html, body {
 					background-size: 70%;
 					background-repeat: no-repeat;
 					background-position: center center;
-					
 					@include animate_it();
 					
 					&.rock {
@@ -922,7 +910,6 @@ html, body {
 					&.scissors {
 						background-image: url('../images/scissors_icon.png');
 					}
-					
 				}
 				
 				.item-description {
@@ -944,7 +931,6 @@ html, body {
 						width: 0%;
 						background: rgba(30,86,119, 1);
 						z-index: -1;
-						
 						@include animate_it();
 					}
 					
@@ -967,8 +953,7 @@ html, body {
 						
 						i {
 							color: #03bb03;
-						}
-							
+						}	
 					}
 				}
 				
@@ -985,7 +970,6 @@ html, body {
 					}
 					
 					.item-description {
-						
 						opacity: 1;
 						
 						&:before {
@@ -994,11 +978,15 @@ html, body {
 					}
 				}
 			}
-		}
-		
+		}	
 	}
-	
 }
+
+/*
+*
+* * * SELECT GAME HISTORY * * * 
+*
+*/
 
 .rps_games_history {
 	display: flex;
@@ -1031,17 +1019,14 @@ html, body {
 			tr:nth-child(odd) td {
 				background: #fff;
 			}
+			
 			span {
-				
 				font-weight: bold;
 				
 				&.won { color: #00a00e; }
 				&.lost { color: #ff0033; }
 				&.draw { color: #d0c100; }
-			}
-			
-		}
-		
+			}	
+		}	
 	}
-	
 }

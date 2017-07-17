@@ -13,6 +13,11 @@ html, body {
   overflow: hidden;
   position: relative; }
 
+/*
+*
+* * * STATIC MENU * * * 
+*
+*/
 .static-menu {
   position: absolute;
   top: 0;
@@ -262,6 +267,11 @@ html, body {
           .rps_select_item .items-to-select .items .item.selected .item-name {
             color: #1e5677; }
 
+/*
+*
+* * * SELECT ENEMY * * * 
+*
+*/
 .rps_select_enemy {
   width: 100%;
   height: 100%;
@@ -374,6 +384,11 @@ html, body {
           .rps_select_enemy .enemies-to-select .enemies .enemy.selected .enemy-name {
             color: #1e5677; }
 
+/*
+*
+* * * SELECT PLAYER * * * 
+*
+*/
 .rps_select_player {
   width: 100%;
   height: 100%;
@@ -515,6 +530,11 @@ html, body {
     height: 100%;
     background-color: #d8d8d8; }
 
+/*
+*
+* * * GAME CONTAINER * * * 
+*
+*/
 .rps_game_container {
   display: flex;
   flex-wrap: nowrap;
@@ -582,6 +602,11 @@ html, body {
       font-size: 16px;
       margin-top: 30px; }
 
+/*
+*
+* * * SELECT GAME RESULT * * * 
+*
+*/
 .rps_game_result {
   display: flex;
   flex-wrap: nowrap;
@@ -770,6 +795,11 @@ html, body {
             .rps_game_result .play-again .items .item:hover .item-description:before {
               width: 100%; }
 
+/*
+*
+* * * SELECT GAME HISTORY * * * 
+*
+*/
 .rps_games_history {
   display: flex;
   flex-wrap: nowrap;
