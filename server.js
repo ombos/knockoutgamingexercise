@@ -138,24 +138,6 @@ function _checkStillOnline(gameObject, gamesOnlineCheck, io, player2) {
 	});
 }
 
-function _gameOnlineCallback(gameId) {
-	
-	if (gameId != undefined) {
-		var gamesToCheck = getGamesOnlineCheck();
-		console.log('Sprawdzenie dla gry: ' + gameId);
-		console.log(gamesToCheck);
-		for (var i = 0; i < gamesToCheck.length; i++) {
-			if (gamesToCheck[i] == gameId) {
-				console.error('GAME ID SIE POKRYWA NIE WOLNO TRUE');
-				break;
-				return false;
-			}
-		}
-		console.log('gra sprawdzona zwrotka true');
-		return true;
-	}
-}
-
 function _createGame(sessionID, request, gamesAwaiting) {
 	console.log('Creating game');
 	if (request != undefined) {
@@ -202,14 +184,9 @@ function _checkForWaitingGames(sessionID, request, gamesAwaiting, gamesOnlineChe
 			var gameToPlay = gamesAwaiting[randomKey];
 	
 			if (gameToPlay.sessionID != sessionID) {
-				_checkStillOnline(gamesAwaiting[randomKey], gamesOnlineCheck, io, request.params);
 				
-				if (_gameOnlineCallback(gameToPlay.gameId) == true) {
-					return gamesAwaiting[randomKey];
-				} else {
-					_deleteGame(gameToPlay.gameId);
-					_checkForWaitingGames(sessionID, request, gamesAwaiting, gamesOnlineCheck, io);
-				}
+				_checkStillOnline(gamesAwaiting[randomKey], gamesOnlineCheck, io, request.params);
+				return gamesAwaiting[randomKey];
 				
 			} else {
 				if (gamesAwaiting.length > 1) {

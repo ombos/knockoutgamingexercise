@@ -180,6 +180,13 @@ controller('rpsController', function($scope, rpsManager) {
 		$scope.playernick = data;
 	});
 	
+	$scope.$on('socket:setid', function(event, data){
+				
+		if (data != undefined) {
+			rpsManager.setMySocketId(data);
+		}
+	});
+	
 	$scope.drawItem = function() {
 		var randomKey = Math.floor(Math.random() * (2 - 0 + 1));
 		var drawItem = $scope.data.items[randomKey];
@@ -226,7 +233,7 @@ controller('rpsController', function($scope, rpsManager) {
 	}
 	
 }).
-directive('rpsStaticMenu', function(){
+directive('rpsStaticMenu', function(rpsSocket){
 	
 	return {
 		scope: true,
@@ -234,10 +241,12 @@ directive('rpsStaticMenu', function(){
 		link: function(scope, element, attrs){
 			
 			scope.goToMainMenu = function() {
+				rpsSocket.disconnect();
 				scope.$emit('stateChange', 2);
 			}
 			
 			scope.goToHistory = function() {
+				rpsSocket.disconnect();
 				scope.$emit('stateChange', 7);
 			}
 			
@@ -417,6 +426,7 @@ directive('rpsSelectPlayer', function(rpsManager, $resource, rpsSocket){
 		transclude: false,
 		link: function(scope, element, attrs) {
 			
+			rpsSocket.connect();
 			rpsManager.setPlayerEnemy('player');
 				
 			TweenMax.to($('.players-to-select'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
@@ -455,13 +465,6 @@ directive('rpsSelectPlayer', function(rpsManager, $resource, rpsSocket){
 				
 			}});
 			
-			scope.$on('socket:setid', function(event, data){
-				
-				if (data != undefined) {
-					rpsManager.setMySocketId(data);
-				}
-			});
-			
 			scope.$on('socket:checkonline', function(event, data) {
 				
 				if (rpsManager.getMySessionId() == data.gameObject.sessionID) {
@@ -489,7 +492,7 @@ directive('rpsSelectPlayer', function(rpsManager, $resource, rpsSocket){
 		}
 	}
 }).
-directive('rpsGameResult', function(rpsManager){
+directive('rpsGameResult', function(rpsManager, rpsSocket){
 	return {
 		scope: true,
 		transclude: false,
@@ -526,13 +529,14 @@ directive('rpsGameResult', function(rpsManager){
 			}
 			
 			scope.goToMainMenu = function(){
-				console.log('go main menu');
+				rpsSocket.disconnect();
 				TweenMax.to($('.rps_game_result'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
 					scope.$emit('stateChange', 2);
 				}});
 			};
 			
 			scope.showGameHistory = function(){
+				rpsSocket.disconnect();
 				TweenMax.to($('.rps_game_result'), 0.8, {css: {transform: "translateY(-100vh)"}, ease:Power2.easeOut, onComplete: function(){
 					scope.$emit('stateChange', 7);
 				}});
